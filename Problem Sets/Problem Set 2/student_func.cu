@@ -131,7 +131,7 @@ void gaussian_blur(const unsigned char* const inputChannel,
   // to be within the bounds of the image. If this is not clear to you, then please refer
   // to sequential reference solution for the exact clamping semantics you should follow.
   float average = 0.0f;
-  for(int filty = - 0; filty < filterWidth; filty++){
+  for(int filty = 0; filty < filterWidth; filty++){
     for(int filtx = 0; filtx < filterWidth; filtx++){
 
       int image_x = point.x + filtx - filterWidth/2;
@@ -174,7 +174,6 @@ void separateChannels(const uchar4* const inputImageRGBA,
   redChannel[index] = inputImageRGBA[index].x;
   greenChannel[index] = inputImageRGBA[index].y;
   blueChannel[index] = inputImageRGBA[index].z;
-
 }
 
 //This kernel takes in three color channels and recombines them
@@ -296,7 +295,7 @@ void your_gaussian_blur(const uchar4 * const h_inputImageRGBA, uchar4 * const d_
                                              numRows,
                                              numCols);
   cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
-
+  cleanup();
 }
 
 

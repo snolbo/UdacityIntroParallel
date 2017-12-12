@@ -309,15 +309,4 @@ void your_histogram_and_prefixsum(const float* const d_logLuminance,
 
   checkCudaErrors(cudaMemcpy(d_cdf, histogram, sizeof(int) * numBins, cudaMemcpyDeviceToDevice));
   cudaFree(histogram);
-
-
-
-
-
-
-
-
-  //   4) Perform an exclusive scan (prefix sum) on the histogram to get
-  //      the cumulative distribution of luminance values (this should go in the
-  //      incoming d_cdf pointer which already has been allocated for you)
 }

@@ -1,5 +1,5 @@
-NVCC=/usr/local/cuda-5.0/bin/nvcc
-#NVCC=nvcc
+#NVCC=/usr/local/cuda-5.0/bin/nvcc
+NVCC=nvcc
 
 ###################################
 # These are the default install   #

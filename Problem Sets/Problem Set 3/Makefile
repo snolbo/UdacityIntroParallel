@@ -31,7 +31,7 @@ NVCC_OPTS=-O3 -arch=sm_20 -Xcompiler -Wall -Xcompiler -Wextra -m64
 GCC_OPTS=-O3 -Wall -Wextra -m64
 
 student: main.o student_func.o HW3.o loadSaveImage.o compare.o reference_calc.o Makefile
-	$(NVCC) -o HW3 main.o student_func.o HW3.o loadSaveImage.o compare.o reference_calc.o -L $(OPENCV_LIBPATH) $(OPENCV_LIBS) $(NVCC_OPTS)
+	$(NVCC) -o HW3 main.o student_func.o HW3.o loadSaveImage.o compare.o reference_calc.o -D_FORCE_INLINES -ccbin=$(CXX) -Xcompiler -fPIC $(COMMON_FLAGS) -L $(OPENCV_LIBPATH) $(OPENCV_LIBS) $(NVCC_OPTS)
 
 main.o: main.cpp timer.h utils.h reference_calc.h compare.h
 	g++ -c main.cpp $(GCC_OPTS) -I $(CUDA_INCLUDEPATH)

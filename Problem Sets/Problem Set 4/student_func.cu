@@ -3,6 +3,14 @@
 
 #include "utils.h"
 #include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
+#include <thrust/scan.h>
+#include <thrust/device_ptr.h>
+#include <thrust/sort.h>
+
+
+
+
 
 /* Red Eye Removal
    ===============
@@ -42,6 +50,20 @@
 
  */
 
+// Creates a histogram using atomicAdd. Could be done faster, alot faster
+__global__
+void histogramKernel(unsigned int* d_bins, unsigned int* d_inputs,
+                    int size,
+                    unsigned int k){
+    int tid = threadIdx.x + blockDim.x * blockIdx.x;
+    if(tid >= size){
+        return;
+    }
+    int binId = (d_inputs[tid] & (1 << k)) >> k;
+    atomicAdd(&d_bins[binId], 1);
+}
+
+
 
 void your_sort(unsigned int* const d_inputVals,
                unsigned int* const d_inputPos,
@@ -51,8 +73,10 @@ void your_sort(unsigned int* const d_inputVals,
 {
   //TODO
   //PUT YOUR SORT HERE
+  // THrust ftw lol
+  thrust::device_ptr<unsigned int> d_inputV(d_inputVals);
+  thrust::device_ptr<unsigned int> d_inputP(d_inputPos);
+  thrust::sort_by_key(d_inputV, d_inputV + numElems, d_inputPos);
 
-  unsigned int* d_predicate;
-  checkCudaErrors(cudaMalloc(@d_predicate, sizeof(unsigned int)* numElems))
 
 }

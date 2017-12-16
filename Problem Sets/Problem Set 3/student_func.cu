@@ -162,65 +162,6 @@ float iterate_until_minmax_found(const float* const d_all, size_t size,
   return minmax;
 }
 
-
-
-// __global__
-// void histogram_kernel(const float* const d_in, unsigned int* d_out, float lumMin, float lumRange,
-  //             size_t numBins, size_t size, int elements_per_thread){
-  // // Shared memory for this block, initialize all values to 0
-  // extern __shared__ float sdata[];
-  // int init_id = threadIdx.x;
-  // while(init_id < size){
-  //   sdata[init_id] = 0;
-  //   init_id += blockDim.x;
-  // }
-  // __syncthreads();
-  //
-  // // Find id based on partitioning, including elements processed per thread
-  // int tid = threadIdx.x;
-  // int mid = blockIdx.x * (blockDim.x * elements_per_thread) + threadIdx.x;
-  //
-  // // Fill local bins
-  // //Only threads inside image gets to update with image values, rest is 0
-  //   if (mid < size){
-  //     for(int i = 0; i < elements_per_thread; i++){
-  //       if(mid + i >= size){
-  //         break; // Break if this thread wants to process elements outside image
-  //       }
-  //       float value = d_in[mid + i];
-  //       int binNum  = (int) floor(((value - lumMin) / lumRange * numBins));
-  //       sdata[mid + binNum]++;
-  //     }
-  //   }
-  // // // Now all threads should have filled bins with values incremented by values form
-  // // // local image or set to 0. Ready to reduce bins
-  // __syncthreads();
-  //
-  // // // Perform reduction
-  // for(int s = blockDim.x / 2; s > 0; s>>=1){
-  //   // Half of threads each iterations reads, modifies, and writes
-  //   if(tid < s){
-  //     int t_index = tid * elements_per_thread;
-  //     int s_index = s   * elements_per_thread;
-  //     for(int i = 0; i < elements_per_thread; i++){
-  //       sdata[t_index + i]  += sdata[s_index + 1];
-  //     }
-  //   }
-  //   // Sync for each reduction
-  //   __syncthreads();
-  // }
-  //
-  // // Now this block's histogram values should be collected in the numBins first bins
-  // // of shared memory
-  // if(blockIdx.x == 0){
-  //   for(int i = 0; i < numBins; i++){
-  //     d_out[i] = atomicAdd(sdata[i], 1);
-  //   }
-  // }
-// }
-
-
-
 __global__
 void atomic_histogram_kernel(const float* const d_in, unsigned int* d_out, float lumMin, float lumRange, size_t size, size_t numBins){
   // Shared memory for this block, initialize all values to 0
